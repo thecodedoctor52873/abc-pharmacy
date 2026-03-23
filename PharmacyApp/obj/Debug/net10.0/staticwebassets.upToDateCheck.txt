@@ -1,2 +1,0 @@
-wwwroot\index.html
-C:\Users\jpint\source\repos\PharmacyApp\PharmacyApp\wwwroot\index.html
