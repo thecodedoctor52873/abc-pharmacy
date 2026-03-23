@@ -1,0 +1,746 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ABC Pharmacy — Medicine Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0d0f14;
+            --surface: #161921;
+            --surface2: #1e2230;
+            --border: #2a2f42;
+            --accent: #00e5a0;
+            --accent2: #5b8fff;
+            --danger: #ff4d6d;
+            --warn: #ffd166;
+            --text: #e8eaf6;
+            --muted: #6b7280;
+            --red-bg: rgba(255,77,109,0.15);
+            --yellow-bg: rgba(255,209,102,0.13);
+            --font-head: 'Syne', sans-serif;
+            --font-mono: 'DM Mono', monospace;
+            --radius: 10px;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-mono);
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+            .logo span {
+                color: var(--accent);
+            }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+        }
+
+        .tab {
+            padding: 8px 20px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--muted);
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.18s;
+        }
+
+            .tab.active {
+                background: var(--surface2);
+                border-color: var(--border);
+                color: var(--text);
+            }
+
+            .tab:hover:not(.active) {
+                color: var(--text);
+            }
+
+        /* ── Layout ── */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px 24px;
+        }
+
+        .section {
+            display: none;
+        }
+
+            .section.active {
+                display: block;
+            }
+
+        /* ── Search bar ── */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+            .search-wrap input {
+                width: 100%;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                color: var(--text);
+                border-radius: var(--radius);
+                padding: 10px 12px 10px 36px;
+                font-family: var(--font-mono);
+                font-size: 0.85rem;
+                outline: none;
+                transition: border 0.18s;
+            }
+
+                .search-wrap input:focus {
+                    border-color: var(--accent);
+                }
+
+        .search-icon {
+            position: absolute;
+            left: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            padding: 10px 18px;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: all 0.18s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #0d0f14;
+        }
+
+            .btn-primary:hover {
+                filter: brightness(1.1);
+            }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+            .btn-outline:hover {
+                border-color: var(--accent);
+                color: var(--accent);
+            }
+
+        .btn-sm {
+            padding: 5px 11px;
+            font-size: 0.78rem;
+        }
+
+        /* ── Legend ── */
+        .legend {
+            display: flex;
+            gap: 18px;
+            font-size: 0.78rem;
+            color: var(--muted);
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-red {
+            background: var(--danger);
+        }
+
+        .dot-yellow {
+            background: var(--warn);
+        }
+
+        /* ── Table ── */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.84rem;
+        }
+
+        thead th {
+            background: var(--surface2);
+            padding: 11px 14px;
+            text-align: left;
+            font-size: 0.73rem;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            font-weight: 500;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.12s;
+        }
+
+            tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            tbody tr:hover {
+                background: rgba(255,255,255,0.03);
+            }
+
+        tbody td {
+            padding: 11px 14px;
+            vertical-align: middle;
+        }
+
+        /* Row color coding */
+        tr.row-red {
+            background: var(--red-bg);
+        }
+
+        tr.row-yellow {
+            background: var(--yellow-bg);
+        }
+
+        tr.row-red:hover {
+            background: rgba(255,77,109,0.22);
+        }
+
+        tr.row-yellow:hover {
+            background: rgba(255,209,102,0.2);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 99px;
+            font-size: 0.73rem;
+            font-weight: 500;
+        }
+
+        .badge-red {
+            background: rgba(255,77,109,0.2);
+            color: var(--danger);
+        }
+
+        .badge-yellow {
+            background: rgba(255,209,102,0.18);
+            color: var(--warn);
+        }
+
+        .badge-green {
+            background: rgba(0,229,160,0.15);
+            color: var(--accent);
+        }
+
+        /* ── Forms ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+            .card h2 {
+                font-family: var(--font-head);
+                font-size: 1.1rem;
+                font-weight: 700;
+                margin-bottom: 20px;
+            }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+            .field label {
+                font-size: 0.75rem;
+                color: var(--muted);
+                letter-spacing: 0.04em;
+            }
+
+            .field input, .field select, .field textarea {
+                background: var(--surface2);
+                border: 1px solid var(--border);
+                color: var(--text);
+                border-radius: 7px;
+                padding: 9px 11px;
+                font-family: var(--font-mono);
+                font-size: 0.84rem;
+                outline: none;
+                transition: border 0.18s;
+            }
+
+                .field input:focus, .field select:focus, .field textarea:focus {
+                    border-color: var(--accent);
+                }
+
+            .field textarea {
+                resize: vertical;
+                min-height: 70px;
+            }
+
+            .field.full {
+                grid-column: 1 / -1;
+            }
+
+        .form-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ── Sales ── */
+        .sale-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        /* ── Toast ── */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--surface2);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            font-size: 0.83rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.25s;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+            #toast.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            #toast.error {
+                border-color: var(--danger);
+                color: var(--danger);
+            }
+
+        /* Modal */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-bg.open {
+                display: flex;
+            }
+
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            width: 100%;
+            max-width: 480px;
+        }
+
+            .modal h3 {
+                font-family: var(--font-head);
+                margin-bottom: 18px;
+            }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">ABC <span>Pharmacy</span></div>
+        <nav class="tabs">
+            <button class="tab active" onclick="showSection('medicines')">💊 Medicines</button>
+            <button class="tab" onclick="showSection('add')">＋ Add Medicine</button>
+            <button class="tab" onclick="showSection('sales')">🧾 Sales</button>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- ══ MEDICINES LIST ══ -->
+        <div id="sec-medicines" class="section active">
+            <div class="toolbar">
+                <div class="search-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input id="searchInput" type="text" placeholder="Search by medicine name…" oninput="searchMedicines()" />
+                </div>
+                <div class="legend">
+                    <span class="legend-item"><span class="dot dot-red"></span> Expires &lt; 30 days</span>
+                    <span class="legend-item"><span class="dot dot-yellow"></span> Stock &lt; 10 units</span>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>FULL NAME</th>
+                            <th>BRAND</th>
+                            <th>EXPIRY DATE</th>
+                            <th>QTY</th>
+                            <th>PRICE (₹)</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="medicineTable"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ══ ADD / EDIT MEDICINE ══ -->
+        <div id="sec-add" class="section">
+            <div class="card">
+                <h2 id="formTitle">Add New Medicine</h2>
+                <input type="hidden" id="editId" />
+                <div class="form-grid">
+                    <div class="field full">
+                        <label>FULL NAME *</label>
+                        <input id="f-name" type="text" placeholder="e.g. Paracetamol 500mg" />
+                    </div>
+                    <div class="field">
+                        <label>BRAND *</label>
+                        <input id="f-brand" type="text" placeholder="e.g. GSK" />
+                    </div>
+                    <div class="field">
+                        <label>EXPIRY DATE *</label>
+                        <input id="f-expiry" type="date" />
+                    </div>
+                    <div class="field">
+                        <label>QUANTITY *</label>
+                        <input id="f-qty" type="number" min="0" placeholder="0" />
+                    </div>
+                    <div class="field">
+                        <label>PRICE (₹) *</label>
+                        <input id="f-price" type="number" step="0.01" min="0" placeholder="0.00" />
+                    </div>
+                    <div class="field full">
+                        <label>NOTES</label>
+                        <textarea id="f-notes" placeholder="Optional notes…"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="saveMedicine()">Save Medicine</button>
+                    <button class="btn btn-outline" onclick="resetForm()">Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ SALES ══ -->
+        <div id="sec-sales" class="section">
+            <div class="card">
+                <h2>Record a Sale</h2>
+                <div class="sale-form">
+                    <div class="field">
+                        <label>SELECT MEDICINE</label>
+                        <select id="s-medicine">
+                            <option value="">— choose medicine —</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>QUANTITY SOLD</label>
+                        <input id="s-qty" type="number" min="1" value="1" />
+                    </div>
+                    <button class="btn btn-primary" style="height:38px" onclick="recordSale()">Record Sale</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>MEDICINE</th>
+                            <th>QTY SOLD</th>
+                            <th>TOTAL (₹)</th>
+                            <th>DATE & TIME</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesTable"><tr><td colspan="5" class="empty">No sales recorded yet.</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Edit modal -->
+    <div class="modal-bg" id="editModal">
+        <div class="modal">
+            <h3>Edit Medicine</h3>
+            <div class="form-grid">
+                <div class="field full"><label>FULL NAME</label><input id="e-name" type="text" /></div>
+                <div class="field"><label>BRAND</label><input id="e-brand" type="text" /></div>
+                <div class="field"><label>EXPIRY DATE</label><input id="e-expiry" type="date" /></div>
+                <div class="field"><label>QUANTITY</label><input id="e-qty" type="number" /></div>
+                <div class="field"><label>PRICE (₹)</label><input id="e-price" type="number" step="0.01" /></div>
+                <div class="field full"><label>NOTES</label><textarea id="e-notes"></textarea></div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" onclick="updateMedicine()">Update</button>
+                <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+const API = '/api';
+let editingId = null;
+
+// ── Utilities ──────────────────────────────────────────────────
+function toast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (isError ? ' error' : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.className = '', 2800);
+}
+
+function formatDate(d) {
+  return new Date(d).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+function formatDateTime(d) {
+  return new Date(d).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+
+function rowClass(med) {
+  const daysLeft = (new Date(med.expiryDate) - Date.now()) / 86400000;
+  if (daysLeft < 30) return 'row-red';
+  if (med.quantity < 10) return 'row-yellow';
+  return '';
+}
+
+function statusBadge(med) {
+  const daysLeft = Math.ceil((new Date(med.expiryDate) - Date.now()) / 86400000);
+  if (daysLeft < 30) return `<span class="badge badge-red">Expiring (${daysLeft}d)</span>`;
+  if (med.quantity < 10) return `<span class="badge badge-yellow">Low Stock</span>`;
+  return `<span class="badge badge-green">OK</span>`;
+}
+
+// ── Section switching ──────────────────────────────────────────
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (name === 'medicines') loadMedicines();
+  if (name === 'sales') { loadSales(); populateSaleSelect(); }
+}
+
+// ── Medicines ──────────────────────────────────────────────────
+async function loadMedicines(search = '') {
+  const url = search ? `${API}/medicines?search=${encodeURIComponent(search)}` : `${API}/medicines`;
+  const res = await fetch(url);
+  const meds = await res.json();
+  const tbody = document.getElementById('medicineTable');
+  if (!meds.length) { tbody.innerHTML = `<tr><td colspan="8" class="empty">No medicines found.</td></tr>`; return; }
+  tbody.innerHTML = meds.map(m => `
+    <tr class="${rowClass(m)}">
+      <td>${m.id}</td>
+      <td><strong>${m.fullName}</strong></td>
+      <td>${m.brand}</td>
+      <td>${formatDate(m.expiryDate)}</td>
+      <td>${m.quantity}</td>
+      <td>₹${parseFloat(m.price).toFixed(2)}</td>
+      <td>${statusBadge(m)}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="openEdit(${m.id})">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteMedicine(${m.id})">Del</button>
+      </td>
+    </tr>`).join('');
+}
+
+function searchMedicines() {
+  loadMedicines(document.getElementById('searchInput').value);
+}
+
+async function saveMedicine() {
+  const med = {
+    fullName: document.getElementById('f-name').value.trim(),
+    brand: document.getElementById('f-brand').value.trim(),
+    expiryDate: document.getElementById('f-expiry').value,
+    quantity: parseInt(document.getElementById('f-qty').value),
+    price: parseFloat(document.getElementById('f-price').value),
+    notes: document.getElementById('f-notes').value.trim(),
+  };
+  if (!med.fullName || !med.brand || !med.expiryDate || isNaN(med.quantity) || isNaN(med.price)) {
+    return toast('Please fill all required fields.', true);
+  }
+  const res = await fetch(`${API}/medicines`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(med) });
+  if (res.ok) { toast('Medicine added!'); resetForm(); }
+  else toast('Failed to save.', true);
+}
+
+function resetForm() {
+  ['f-name','f-brand','f-expiry','f-qty','f-price','f-notes'].forEach(id => document.getElementById(id).value = '');
+}
+
+async function deleteMedicine(id) {
+  if (!confirm('Delete this medicine?')) return;
+  const res = await fetch(`${API}/medicines/${id}`, { method:'DELETE' });
+  if (res.ok) { toast('Deleted.'); loadMedicines(); }
+  else toast('Delete failed.', true);
+}
+
+async function openEdit(id) {
+  const res = await fetch(`${API}/medicines/${id}`);
+  const m = await res.json();
+  editingId = id;
+  document.getElementById('e-name').value = m.fullName;
+  document.getElementById('e-brand').value = m.brand;
+  document.getElementById('e-expiry').value = m.expiryDate.substring(0,10);
+  document.getElementById('e-qty').value = m.quantity;
+  document.getElementById('e-price').value = m.price;
+  document.getElementById('e-notes').value = m.notes;
+  document.getElementById('editModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('editModal').classList.remove('open');
+}
+
+async function updateMedicine() {
+  const med = {
+    fullName: document.getElementById('e-name').value.trim(),
+    brand: document.getElementById('e-brand').value.trim(),
+    expiryDate: document.getElementById('e-expiry').value,
+    quantity: parseInt(document.getElementById('e-qty').value),
+    price: parseFloat(document.getElementById('e-price').value),
+    notes: document.getElementById('e-notes').value.trim(),
+  };
+  const res = await fetch(`${API}/medicines/${editingId}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(med) });
+  if (res.ok) { toast('Updated!'); closeModal(); loadMedicines(); }
+  else toast('Update failed.', true);
+}
+
+// ── Sales ──────────────────────────────────────────────────────
+async function populateSaleSelect() {
+  const res = await fetch(`${API}/medicines`);
+  const meds = await res.json();
+  const sel = document.getElementById('s-medicine');
+  sel.innerHTML = '<option value="">— choose medicine —</option>' +
+    meds.map(m => `<option value="${m.id}">${m.fullName} (Stock: ${m.quantity})</option>`).join('');
+}
+
+async function loadSales() {
+  const res = await fetch(`${API}/sales`);
+  const sales = await res.json();
+  const tbody = document.getElementById('salesTable');
+  if (!sales.length) { tbody.innerHTML = `<tr><td colspan="5" class="empty">No sales recorded yet.</td></tr>`; return; }
+  tbody.innerHTML = [...sales].reverse().map(s => `
+    <tr>
+      <td>${s.id}</td>
+      <td>${s.medicineName}</td>
+      <td>${s.quantitySold}</td>
+      <td>₹${parseFloat(s.totalAmount).toFixed(2)}</td>
+      <td>${formatDateTime(s.saleDate)}</td>
+    </tr>`).join('');
+}
+
+async function recordSale() {
+  const medId = parseInt(document.getElementById('s-medicine').value);
+  const qty = parseInt(document.getElementById('s-qty').value);
+  if (!medId || !qty || qty < 1) return toast('Select a medicine and valid quantity.', true);
+  const res = await fetch(`${API}/sales`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ medicineId: medId, quantitySold: qty })
+  });
+  if (res.ok) { toast('Sale recorded!'); loadSales(); populateSaleSelect(); }
+  else { const err = await res.text(); toast(err || 'Sale failed.', true); }
+}
+
+// ── Init ───────────────────────────────────────────────────────
+loadMedicines();
+    </script>
+</body>
+</html>

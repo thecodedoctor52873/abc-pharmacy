@@ -1,0 +1,47 @@
+[
+  {
+    "Id": 1,
+    "FullName": "Paracetamol 500mg",
+    "Notes": "Common painkiller",
+    "ExpiryDate": "2026-04-02T00:00:00+05:30",
+    "Quantity": 49,
+    "Price": 5.99,
+    "Brand": "GSK"
+  },
+  {
+    "Id": 2,
+    "FullName": "Amoxicillin 250mg",
+    "Notes": "Antibiotic",
+    "ExpiryDate": "2026-07-21T00:00:00+05:30",
+    "Quantity": 8,
+    "Price": 12.50,
+    "Brand": "Cipla"
+  },
+  {
+    "Id": 3,
+    "FullName": "Ibuprofen 400mg",
+    "Notes": "Anti-inflammatory",
+    "ExpiryDate": "2026-10-09T00:00:00+05:30",
+    "Quantity": 30,
+    "Price": 8.75,
+    "Brand": "Pfizer"
+  },
+  {
+    "Id": 4,
+    "FullName": "Metformin 500mg",
+    "Notes": "Diabetes medication",
+    "ExpiryDate": "2026-04-17T00:00:00+05:30",
+    "Quantity": 5,
+    "Price": 3.20,
+    "Brand": "Sun Pharma"
+  },
+  {
+    "Id": 5,
+    "FullName": "Atorvastatin 10mg",
+    "Notes": "Cholesterol",
+    "ExpiryDate": "2027-01-17T00:00:00+05:30",
+    "Quantity": 20,
+    "Price": 15.00,
+    "Brand": "Ranbaxy"
+  }
+]
