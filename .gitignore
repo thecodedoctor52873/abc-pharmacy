@@ -5,3 +5,5 @@ obj/
 *.suo
 .DS_Store
 Thumbs.db
+"data.json" 
+"sales.json" 
