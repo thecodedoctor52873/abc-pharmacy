@@ -1,2 +1,7 @@
-".vs/" 
-".vs/" 
+bin/
+obj/
+.vs/
+*.user
+*.suo
+.DS_Store
+Thumbs.db
