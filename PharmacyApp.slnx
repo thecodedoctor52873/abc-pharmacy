@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="PharmacyApp.Core/PharmacyApp.Core.csproj" Id="8282b4f8-974d-45e9-b079-7094783ebaff" />
+  <Project Path="PharmacyApp.Tests/PharmacyApp.Tests.csproj" Id="28351801-aa92-4049-b1f6-76a162eadf1c" />
   <Project Path="PharmacyApp/PharmacyApp.csproj" />
 </Solution>
