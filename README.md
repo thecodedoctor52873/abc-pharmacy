@@ -18,12 +18,16 @@ A Single Page Application built with **.NET 10 Web API** and vanilla **JavaScrip
 - **Backend:** ASP.NET Core Minimal API (.NET 10)
 - **Frontend:** Vanilla JavaScript, HTML, CSS (Single Page)
 - **Storage:** JSON files (`data.json`, `sales.json`)
+- **Validation:** FluentValidation
+- **Logging:** Serilog (console + rolling file)
+- **Tests:** xUnit (16 tests)
+- **CI/CD:** GitHub Actions → Docker Hub
 
 ## How to Run
 
 **Step 1:** Clone the repo
 ```bash
-git clone https://github.com/YOUR_USERNAME/abc-pharmacy.git
+git clone https://github.com/thecodedoctor52873/abc-pharmacy.git
 cd abc-pharmacy
 ```
 
@@ -37,16 +41,33 @@ dotnet run --project PharmacyApp
 http://localhost:5000
 ```
 
+## Run Tests
+
+```bash
+dotnet test PharmacyApp.Tests
+```
+
 ## Project Structure
 
 ```
-PharmacyApp/
-├── Program.cs            # All API endpoints + models
-├── PharmacyApp.csproj    # .NET 10 project file
-├── data.json             # Medicine data (auto-created)
-├── sales.json            # Sales records (auto-created)
-├── Properties/
-│   └── launchSettings.json
-└── wwwroot/
-    └── index.html        # Full frontend
+abc-pharmacy/
+├── PharmacyApp/                  # Web API
+│   ├── Program.cs                # All API endpoints
+│   ├── PharmacyApp.csproj
+│   ├── Properties/
+│   │   └── launchSettings.json
+│   └── wwwroot/
+│       └── index.html            # Full frontend (SPA)
+├── PharmacyApp.Core/             # Shared models & validators
+│   ├── Models/
+│   │   ├── Medicine.cs
+│   │   └── Sale.cs
+│   └── Validators/
+│       └── Validators.cs
+├── PharmacyApp.Tests/            # xUnit tests (16 tests)
+│   └── PharmacyTests.cs
+├── Dockerfile
+└── .github/
+    └── workflows/
+        └── docker-publish.yml    # CI/CD pipeline
 ```
