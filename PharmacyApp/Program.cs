@@ -1,9 +1,11 @@
-using System.Text.Json;
 using FluentValidation;
 using Microsoft.Extensions.Caching.Memory;
 using PharmacyApp.Core.Models;
 using PharmacyApp.Core.Validators;
+using Scalar.AspNetCore;
 using Serilog;
+using System.Text.Json;
+using System.Threading.RateLimiting;
 
 // ── Serilog Setup ────────────────────────────────────────────────
 Log.Logger = new LoggerConfiguration()
@@ -15,6 +17,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 builder.Services.AddCors();
 builder.Services.AddMemoryCache();
+builder.Services.AddHealthChecks();
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 30, Window = TimeSpan.FromMinutes(1) }
+        ));
+    options.RejectionStatusCode = 429;
+});
+builder.Services.AddOpenApi();
+
 builder.Services.AddScoped<IValidator<Medicine>, MedicineValidator>();
 builder.Services.AddScoped<IValidator<Sale>, SaleValidator>();
 
@@ -43,6 +57,10 @@ app.Use(async (context, next) =>
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseDefaultFiles();
 app.UseStaticFiles();
+app.UseRateLimiter();
+app.MapOpenApi();
+app.MapScalarApiReference();
+app.MapHealthChecks("/health");
 
 // ── Data file path ──────────────────────────────────────────────
 var dataFile = Path.Combine(app.Environment.ContentRootPath, "data.json");
